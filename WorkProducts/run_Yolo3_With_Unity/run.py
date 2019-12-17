@@ -7,6 +7,7 @@ import threading
 import queue
 
 import time
+import modules.lane_sign_predict
 
 rspeed = 0
 speed = 0
