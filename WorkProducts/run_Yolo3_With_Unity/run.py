@@ -7,7 +7,7 @@ import threading
 import queue
 
 import time
-import modules.lane_sign_predict
+from modules.lane_sign_predict import lane_trafficsign
 
 rspeed = 0
 speed = 0
@@ -56,6 +56,7 @@ class processThread (threading.Thread):
    def __init__(self, threadID):
       threading.Thread.__init__(self)
       self.threadID = threadID
+      self.process_object = lane_trafficsign("main", "configWithText.json", "../data_raw_yolov3", "output/")
    def run(self):
       global speed
       global angle
