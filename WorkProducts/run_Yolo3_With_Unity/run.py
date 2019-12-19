@@ -56,21 +56,28 @@ class processThread (threading.Thread):
    def __init__(self, threadID):
       threading.Thread.__init__(self)
       self.threadID = threadID
-      self.process_object = lane_trafficsign("main", "configWithText.json", "../data_raw_yolov3", "output/")
+      self.process_object = lane_trafficsign("main", 
+                                             "configWithText.json", 
+                                             "../data_raw_yolov3/", 
+                                             "output/")
    def run(self):
       global speed
       global angle
       while True:
          try:
-            img = cv2.imread(path)
-            speed = 10
-            print('speed now is : {0}', rspeed)
-            if img is not None:
-               cv2.imshow('image', img)
+            print("Processing")
+            self.process_object.predict("../data_raw_yolov3/0118.png")
+            sys.exit()
+            # img = cv2.imread(path)
+            # speed = 10
+            # print('speed now is : {0}', rspeed)
+            # if img is not None:
+            #    cv2.imshow('image', img)
             
-               cv2.waitKey(1)
+            # cv2.waitKey(1)
          except Exception as e:
-            print(e)
+            print('error process thread', e)
+            sys.exit()
       cv2.destroyAllWindows()
 
 try:

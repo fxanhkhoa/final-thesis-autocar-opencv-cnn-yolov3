@@ -10,7 +10,6 @@ from utils.bbox import draw_boxes
 import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior()
 from keras.models import load_model
-from tqdm import tqdm
 import numpy as np
 
 class lane_trafficsign:
@@ -57,7 +56,7 @@ class lane_trafficsign:
 
         # the main loop
         for image_path in image_paths:
-            image = cv2.imread(image_path)
+            image = cv2.imread(pic)
             print(image_path)
 
             # predict the bounding boxes
