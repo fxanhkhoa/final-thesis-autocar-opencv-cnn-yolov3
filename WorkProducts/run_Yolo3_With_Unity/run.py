@@ -41,8 +41,8 @@ class socketThread (threading.Thread):
       while(True):
          try:
             message = jsonToString(speed, angle)
-            sock.sendall(message.encode())
-            data = sock.recv(100).decode('ascii')
+            self.sock.sendall(message.encode())
+            data = self.sock.recv(100).decode('ascii')
             rspeed = int(data)
             # print(speed)
          except Exception as e:
@@ -66,8 +66,21 @@ class processThread (threading.Thread):
       while True:
          try:
             print("Processing")
-            self.process_object.predict("../data_raw_yolov3/0118.png")
-            sys.exit()
+            ret = self.process_object.predict("../data_raw_yolov3/0118.png")
+
+            for each_object in ret:
+               if each_object[0] == 'NoLeft':
+                  angle = 45
+               elif each_object[0] == 'NoRight':
+                  angle = -45
+               else:
+                  angle = int(each_object[0])
+
+               speed = 10
+
+               message = jsonToString(speed, angle)
+               sock.sendall(message.encode())
+            # sys.exit()
             # img = cv2.imread(path)
             # speed = 10
             # print('speed now is : {0}', rspeed)

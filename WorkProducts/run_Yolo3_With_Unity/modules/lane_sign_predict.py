@@ -26,7 +26,7 @@ class lane_trafficsign:
         self.output_path = output_path
 
     def predict(self, pic):
-        ret = "NONE"
+        ret = []
 
         with open(self.config_path) as config_buffer:    
             config = json.load(config_buffer)
@@ -37,7 +37,7 @@ class lane_trafficsign:
         #   Set some parameter
         ###############################       
         net_h, net_w = 416, 416 # a multiple of 32, the smaller the faster
-        obj_thresh, nms_thresh = 0.5, 0.45
+        obj_thresh, nms_thresh = 0.7, 0.45
 
         ###############################
         #   Load the model
@@ -55,27 +55,29 @@ class lane_trafficsign:
         image_paths = [inp_file for inp_file in image_paths if (inp_file[-4:] in ['.jpg', '.png', 'JPEG'])]
 
         # the main loop
-        for image_path in image_paths:
-            image = cv2.imread(pic)
-            print(image_path)
+        # for image_path in image_paths:
+        image = cv2.imread(pic)
+        print(pic)
 
-            # predict the bounding boxes
-            boxes = get_yolo_boxes(infer_model, 
-                                    [image], 
-                                    net_h, 
-                                    net_w, 
-                                    config['model']['anchors'], 
-                                    obj_thresh, 
-                                    nms_thresh)[0]
-            for box in boxes:
-              for i in range(len(config['model']['labels'])):
+        # predict the bounding boxes
+        boxes = get_yolo_boxes(infer_model, 
+                                [image], 
+                                net_h, 
+                                net_w, 
+                                config['model']['anchors'], 
+                                obj_thresh, 
+                                nms_thresh)[0]
+        for box in boxes:
+            for i in range(len(config['model']['labels'])):
                 if box.classes[i] > obj_thresh:
-                  print(config['model']['labels'][i], " ", box.classes[i])
+                    ret.append([config['model']['labels'][i], box.classes[i]])
+                    print(config['model']['labels'][i], " ", box.classes[i])
 
-            # draw bounding boxes on the image using labels
-            draw_boxes(image, boxes, config['model']['labels'], obj_thresh) 
-     
-            # write the image with bounding boxes to file
-            cv2.imwrite(self.output_path + image_path.split('/')[-1], np.uint8(image))
+        # draw bounding boxes on the image using labels
+        draw_boxes(image, boxes, config['model']['labels'], obj_thresh) 
+    
+        # write the image with bounding boxes to file
+        print("file save to {}".format(self.output_path + pic.split('/')[-1]))
+        cv2.imwrite(self.output_path + pic.split('/')[-1], np.uint8(image))
 
         return ret
