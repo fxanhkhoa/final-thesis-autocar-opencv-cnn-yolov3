@@ -12,7 +12,7 @@ from modules.lane_sign_predict import lane_trafficsign
 rspeed = 0
 speed = 0
 angle = 0
-path = 'window_version_Data/Snapshots/fx_UIT_Car.png'
+path = '../simulate_run/window_version_Data/Snapshots/fx_UIT_Car.png'
 
 port = 9999
 ip = str(sys.argv[1])
@@ -65,8 +65,9 @@ class processThread (threading.Thread):
       global angle
       while True:
          try:
+            curtime = time.time()
             print("Processing")
-            ret = self.process_object.predict("../data_raw_yolov3/0118.png")
+            ret = self.process_object.predict(path)
 
             for each_object in ret:
                if each_object[0] == 'NoLeft':
@@ -80,6 +81,7 @@ class processThread (threading.Thread):
 
                message = jsonToString(speed, angle)
                sock.sendall(message.encode())
+               print("Processing {} / frame = {}".format(time.time() - curtime, 1 / (time.time() - curtime)))
             # sys.exit()
             # img = cv2.imread(path)
             # speed = 10

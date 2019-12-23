@@ -45,6 +45,6 @@ while minus_time < datetime.timedelta(0,12):
 df['current_time'] = current_time
 df['frame_processing'] = time_per_frame
 
-export_csv = df.to_csv ("data.csv", index = None, header=True) #Don't forget to add '.csv' at the end of the path
+export_csv = df.to_csv ("data_YOLO.csv", index = None, header=True) #Don't forget to add '.csv' at the end of the path
 
 print (df)
